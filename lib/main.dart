@@ -65,20 +65,15 @@ class MainAppWidget extends StatelessWidget {
               style: theme.textTheme.displayLarge,
             ),
             DiscreetWidget(
-              discreetModeEnabled: discreetModeEnabled,
+              discreetModeEnabled: false,
               child: Text(
                 '\$123',
                 style: theme.textTheme.titleMedium,
               ),
             ),
-            Blurred(
-              sigmaX: 10,
-              sigmaY: 5,
-              tileMode: TileMode.decal,
-              child: Text(
-                '123',
-                style: theme.textTheme.bodyMedium,
-              ),
+            Text(
+              '\$123',
+              style: theme.textTheme.bodyLarge,
             ),
             Flexible(
               child: Text(
