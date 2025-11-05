@@ -1,12 +1,8 @@
 // ignore_for_file: avoid_print
 
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:wasm_bug_report/animated_blur.dart';
-
-const kFontFamily = "Manrope";
-const kFontFamilyFallback = [".SF UI Text", ".SF UI Display", "Roboto", "Arial"];
+import 'package:wasm_bug_report/theme.dart';
 
 void main() {
   const isRunningWithWasm1 = bool.fromEnvironment("dart.tool.dart2wasm");
@@ -28,79 +24,73 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   bool discreetModeEnabled = true;
 
-  final theme = ThemeData(
-    fontFamily: kFontFamily,
-    fontFamilyFallback: kFontFamilyFallback,
-  );
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: theme,
-      home: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            spacing: 16,
-            children: [
-              Text('Hello World!'),
-              DiscreetWidget(
-                discreetModeEnabled: discreetModeEnabled,
-                child: Text('\$123'),
+      theme: kAppLightTheme,
+      home: MainAppWidget(
+        discreetModeEnabled: discreetModeEnabled,
+        onDiscreetModeToggle: () {
+          setState(() {
+            discreetModeEnabled = !discreetModeEnabled;
+          });
+        },
+      ),
+    );
+  }
+}
+
+class MainAppWidget extends StatelessWidget {
+  final bool discreetModeEnabled;
+  final void Function() onDiscreetModeToggle;
+  const MainAppWidget({
+    super.key,
+    required this.discreetModeEnabled,
+    required this.onDiscreetModeToggle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          spacing: 40,
+          children: [
+            Text(
+              'Hello World!',
+              style: theme.textTheme.displayLarge,
+            ),
+            DiscreetWidget(
+              discreetModeEnabled: discreetModeEnabled,
+              child: Text(
+                '\$123',
+                style: theme.textTheme.titleMedium,
               ),
-              Blurred(
-                sigmaX: 10,
-                sigmaY: 5,
-                tileMode: TileMode.decal,
-                child: Text('123'),
+            ),
+            Blurred(
+              sigmaX: 10,
+              sigmaY: 5,
+              tileMode: TileMode.decal,
+              child: Text(
+                '123',
+                style: theme.textTheme.bodyMedium,
               ),
-              Blurred(
-                sigmaX: 10,
-                sigmaY: 5,
-                tileMode: TileMode.decal,
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  color: Colors.red,
-                ),
+            ),
+            Flexible(
+              child: Text(
+                '123',
+                style: theme.textTheme.titleMedium,
               ),
-              ImageFiltered(
-                imageFilter: ImageFilter.blur(
-                  sigmaX: 10,
-                  sigmaY: 5,
-                  tileMode: TileMode.clamp,
-                ),
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  color: Colors.red,
-                ),
-              ),
-              ImageFiltered(
-                imageFilter: ImageFilter.blur(
-                  sigmaX: 5,
-                  sigmaY: 5,
-                  tileMode: TileMode.clamp,
-                ),
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  color: Colors.red,
-                ),
-              ),
-              Text('123'),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    discreetModeEnabled = !discreetModeEnabled;
-                  });
-                },
-                child: Text('Toggle Discreet Mode'),
-              ),
-            ],
-          ),
+            ),
+            ElevatedButton(
+              onPressed: onDiscreetModeToggle,
+              child: Text('Toggle Discreet Mode'),
+            ),
+          ],
         ),
       ),
     );
